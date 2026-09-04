@@ -35,10 +35,46 @@ namespace Acore::Asio
         Optional<boost::asio::ip::tcp::endpoint> Resolve(boost::asio::ip::tcp const& protocol, std::string const& host, std::string const& service)
         {
             boost::system::error_code ec;
+            boost::asio::ip::address address = boost::asio::ip::make_address(host, ec);
+            if (!ec)
+            {
+                if (protocol == boost::asio::ip::tcp::v4() && !address.is_v4())
+                {
+                    return {};
+                }
+                if (protocol == boost::asio::ip::tcp::v6() && !address.is_v6())
+                {
+                    return {};
+                }
+
+                uint16 port = 0;
+                if (!service.empty())
+                {
+                    try
+                    {
+                        port = static_cast<uint16>(std::stoul(service));
+                    }
+                    catch (...)
+                    {
+                    }
+                }
+                return boost::asio::ip::tcp::endpoint(address, port);
+            }
+
+            ec.clear();
+            boost::asio::ip::tcp::resolver::results_type results = _impl.resolve(protocol, host, service, ec);
+            if (!ec && results.begin() != results.end())
+            {
+                return results.begin()->endpoint();
+            }
+
+            ec.clear();
             boost::asio::ip::resolver_base::flags flagsResolver = boost::asio::ip::resolver_base::all_matching;
-            boost::asio::ip::tcp::resolver::results_type results = _impl.resolve(protocol, host, service, flagsResolver, ec);
+            results = _impl.resolve(protocol, host, service, flagsResolver, ec);
             if (results.begin() == results.end() || ec)
+            {
                 return {};
+            }
 
             return results.begin()->endpoint();
         }

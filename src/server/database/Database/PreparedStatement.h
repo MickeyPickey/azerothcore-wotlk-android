@@ -76,7 +76,26 @@ public:
     template<typename T>
     inline Acore::Types::is_default<T> SetData(const uint8 index, T value)
     {
-        SetValidData(index, value);
+        if constexpr (std::is_same_v<T, long>)
+        {
+            SetValidData(index, static_cast<int64>(value));
+        }
+        else if constexpr (std::is_same_v<T, unsigned long>)
+        {
+            SetValidData(index, static_cast<uint64>(value));
+        }
+        else if constexpr (std::is_same_v<T, long long>)
+        {
+            SetValidData(index, static_cast<int64>(value));
+        }
+        else if constexpr (std::is_same_v<T, unsigned long long>)
+        {
+            SetValidData(index, static_cast<uint64>(value));
+        }
+        else
+        {
+            SetValidData(index, value);
+        }
     }
 
     // Set enums
@@ -110,7 +129,7 @@ public:
     template<class _Rep, class _Period>
     inline void SetData(const uint8 index, std::chrono::duration<_Rep, _Period> const& value, bool convertToUin32 = true)
     {
-        SetValidData(index, convertToUin32 ? static_cast<uint32>(value.count()) : value.count());
+        SetValidData(index, convertToUin32 ? static_cast<uint32>(value.count()) : static_cast<uint64>(value.count()));
     }
 
     // Set all
