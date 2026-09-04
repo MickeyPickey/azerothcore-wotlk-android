@@ -70,20 +70,23 @@ cd ~/azerothcore-src
 
 ---
 
-### Step 3: (Optional) Select and Pull Modules
+### Step 3: Select and Pull Modules
 
-This repository includes a pre-configured module list supporting 40+ popular AzerothCore mods (Playerbots, AutoBalance, Solo-LFG, Transmog, etc.):
+This repository includes a pre-configured module list supporting 40+ popular AzerothCore mods with a **stable lockfile** to prevent broken builds:
 
 1. Open `conf/modules.list` in a text editor (e.g. `nano conf/modules.list`).
-2. Uncomment (remove `#`) from the modules you want to enable:
-   ```text
-   # Example: enable AutoBalance and Solo-LFG
-   https://github.com/azerothcore/mod-autobalance.git
-   https://github.com/azerothcore/mod-solo-lfg.git
-   ```
-3. Run the pull script to fetch them with fast, storage-saving shallow clones (`--depth 1`):
+2. We have enabled 24 curated modules out-of-the-box (`mod-playerbots`, `AutoBalance`, `Solo-LFG`, `Transmog`, etc.). Uncomment or comment (`#`) any mods you want to add or remove.
+3. Run the pull script:
    ```bash
+   # Default: Clones and pins all enabled modules to verified, STABLE commits:
    ./tools/pull_modules.sh
+
+   # (Optional) Want bleeding-edge latest upstream versions?
+   ./tools/pull_modules.sh --latest
+
+   # If an upstream update ever fails or breaks compilation, instantly roll back:
+   ./tools/pull_modules.sh --stable
+   # (Or roll back a specific module: ./tools/pull_modules.sh --stable mod-playerbots)
    ```
 
 ---
