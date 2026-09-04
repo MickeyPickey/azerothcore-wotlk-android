@@ -9,7 +9,16 @@
 # ------------------------------------------------------------------------------
 # Configuration & Paths
 # ------------------------------------------------------------------------------
-SERVER_DIR="${SERVER_DIR:-$HOME/azeroth-server}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
+DEFAULT_SERVER_DIR="$(dirname "$SCRIPT_DIR")"
+if [ ! -d "$DEFAULT_SERVER_DIR/bin" ]; then
+    if [ -d "/data/data/com.termux/files/home/azeroth-server/bin" ]; then
+        DEFAULT_SERVER_DIR="/data/data/com.termux/files/home/azeroth-server"
+    elif [ -d "$HOME/azeroth-server/bin" ]; then
+        DEFAULT_SERVER_DIR="$HOME/azeroth-server"
+    fi
+fi
+SERVER_DIR="${SERVER_DIR:-$DEFAULT_SERVER_DIR}"
 SESSION_NAME="${SESSION_NAME:-wow_server}"
 CPU_CORES="${CPU_CORES:-0-1}"
 PREFIX="${PREFIX:-/data/data/com.termux/files/usr}"
@@ -61,12 +70,18 @@ pkill -f "worldserver" || true
 pkill -f "authserver" || true
 
 # 2. Restart MariaDB cleanly
-echo "[+] Step 2/5: Restarting MariaDB service..."
-pkill -f "mariadbd" 2>/dev/null || true
-sleep 2
+echo "[+] Step 2/5: Managing MariaDB service..."
+if pgrep -f "mariadbd" >/dev/null 2>&1; then
+    echo "[-] Stopping existing MariaDB instance..."
+    mariadb-admin -u root shutdown 2>/dev/null || pkill -f "mariadbd" 2>/dev/null || true
+    for _ in {1..15}; do
+        pgrep -f "mariadbd" >/dev/null 2>&1 || break
+        sleep 1
+    done
+fi
 
 echo "[-] Launching fresh MariaDB instance (cores $CPU_CORES)..."
-taskset -c "$CPU_CORES" mariadbd-safe --datadir="$MYSQL_DATADIR" --user="$(whoami)" > /dev/null 2>&1 &
+taskset -c "$CPU_CORES" mariadbd-safe --datadir="$MYSQL_DATADIR" --user=root > /dev/null 2>&1 &
 
 echo "[-] Waiting for database initialization..."
 DB_READY=false
@@ -131,5 +146,12 @@ echo "=========================================================="
 echo "✅ Server started! Attaching to tmux session: $SESSION_NAME"
 echo "=========================================================="
 
-# Attach to tmux session
-exec tmux attach-session -t "$SESSION_NAME"
+# Attach to tmux session if attached to interactive terminal
+if [ -t 0 ] && [ -t 1 ] && [ "$TERM" != "dumb" ] && [ -n "$TERM" ]; then
+    exec tmux attach-session -t "$SESSION_NAME"
+else
+    echo "=========================================================="
+    echo "✅ Server started! Tmux session '$SESSION_NAME' running in background."
+    echo "👉 To attach interactively, run: tmux attach -t $SESSION_NAME"
+    echo "=========================================================="
+fi
