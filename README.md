@@ -6,17 +6,17 @@ A tuned, native [AzerothCore](https://www.azerothcore.org/) World of Warcraft (3
 
 ## 🌟 Acknowledgements & Inspiration
 
-* **Inspiration & Concept:** Special thanks and credit to [duall/singlePlayerWow-android](https://github.com/duall/singlePlayerWow-android) for proving that running a full WoW WotLK server natively on Android is possible, and providing the initial inspiration and configuration reference for mobile Termux deployments.
-* **Upstream Project:** Built on top of the incredible ongoing work by the [AzerothCore](https://github.com/azerothcore/azerothcore-wotlk) team and community.
+* **Inspiration & Concept:** Special thanks and credit to [duall/singlePlayerWow-android](https://github.com/duall/singlePlayerWow-android) for providing the original inspiration, concept, and groundwork for running a full AzerothCore server natively on Android.
+* **Upstream Project:** Built on top of the incredible work by the [AzerothCore](https://github.com/azerothcore/azerothcore-wotlk) team and community.
 
 ---
 
 ## 🛠️ Android & MariaDB Compatibility Fixes
 
-Standard AzerothCore is written for x86_64 desktop Linux with Oracle MySQL 8.0+. Running natively on Android ARM64 under Termux requires addressing several platform-specific constraints:
+Standard AzerothCore is written for desktop Linux with Oracle MySQL 8.0+. Running natively on Android ARM64 under Termux requires addressing several platform-specific constraints:
 
 1. **MariaDB Client Library Compatibility (`libmariadb`):**
-   * Termux provides MariaDB rather than Oracle MySQL. AzerothCore's upstream MySQL driver attempts to use MySQL 8.3+ functions (such as `mysql_stmt_bind_named_param`) and modern SSL modes that do not exist in `libmariadb`.
+   * Termux provides MariaDB rather than Oracle MySQL. AzerothCore upstream attempts to use MySQL 8.3+ functions (such as `mysql_stmt_bind_named_param`) and modern SSL modes that do not exist in `libmariadb`.
    * **Fix applied:** Added `#if !defined(MARIADB_VERSION_ID)` preprocessor guards in `MySQLConnection.cpp`, `DBUpdater.cpp`, and `DatabaseWorkerPool` to smoothly support MariaDB 10.5+ and its SSL/binding APIs.
 2. **Android Bionic libc 64-bit Integer Mapping:**
    * Android's Bionic C library defines `int64_t` / `uint64_t` in a way that causes template ambiguities in `PreparedStatement::SetData` when passing standard integral types and durations.
@@ -26,8 +26,11 @@ Standard AzerothCore is written for x86_64 desktop Linux with Oracle MySQL 8.0+.
    * **Fix applied:** Adjusted `ProcessPriority.cpp` to prevent permission errors when initializing worker threads.
 4. **gSOAP & Network Stack:**
    * Fixed empty response handling in `deps/gsoap/stdsoap2.cpp` for mobile POSIX network environments.
-5. **Modular Build & Sync Tool:**
-   * Added `tools/pull_modules.sh` and `conf/modules.list` to download and update optional gameplay mods using shallow clones (`--depth 1`), keeping disk usage low and build times fast.
+5. **Built-in Automation Suite:**
+   * Added `tools/pull_modules.sh`: Module manager supporting 40+ optional mods using shallow clones (`--depth 1`).
+   * Added `tools/configure.sh`: One-command CMake configuration with Android compiler flags.
+   * Added `tools/ac_server_start.sh` & `tools/ac_server_stop.sh`: Automated tmux launcher with dynamic Wi-Fi IP detection.
+   * Added `tools/sync_upstream.sh`: One-command upstream synchronization and rebase.
 
 ---
 
@@ -51,16 +54,16 @@ pkg update && pkg upgrade -y
 pkg install git cmake make clang mariadb boost-headers boost-static tmux libc++ curl unzip -y
 ```
 
-> **Tip:** Run `termux-wake-lock` to keep Termux active in the background while compiling or running the server.
+> **Tip:** Run `termux-wake-lock` to prevent Android from putting Termux to sleep during compilation.
 
 ---
 
 ### Step 2: Clone the Repository
 
-Clone this repository and switch to the `termux-device` branch:
+Clone this repository and switch to the `android-termux` branch:
 
 ```bash
-git clone -b termux-device https://github.com/MickeyPickey/azerothcore-wotlk.git ~/azerothcore-src
+git clone -b android-termux https://github.com/MickeyPickey/azerothcore-android.git ~/azerothcore-src
 cd ~/azerothcore-src
 ```
 
@@ -68,10 +71,10 @@ cd ~/azerothcore-src
 
 ### Step 3: (Optional) Select and Pull Modules
 
-This repository includes a module manager that supports 40+ popular AzerothCore mods (Playerbots, AutoBalance, Solo-LFG, Transmog, etc.):
+This repository includes a pre-configured module list supporting 40+ popular AzerothCore mods (Playerbots, AutoBalance, Solo-LFG, Transmog, etc.):
 
 1. Open `conf/modules.list` in a text editor (e.g. `nano conf/modules.list`).
-2. Uncomment (remove `#`) from the modules you want to include:
+2. Uncomment (remove `#`) from the modules you want to enable:
    ```text
    # Example: enable AutoBalance and Solo-LFG
    https://github.com/azerothcore/mod-autobalance.git
@@ -86,29 +89,17 @@ This repository includes a module manager that supports 40+ popular AzerothCore 
 
 ### Step 4: Configure and Compile
 
-Create a `build` directory and run CMake with Android-specific flags:
+We provide a helper script that automatically applies all Android Clang and linker flags:
 
 ```bash
-mkdir -p build && cd build
+# 1. Run the Android CMake configurator
+./tools/configure.sh
 
-cmake .. \
-  -DCMAKE_INSTALL_PREFIX=$HOME/azeroth-server/ \
-  -DCMAKE_C_COMPILER=$PREFIX/bin/clang \
-  -DCMAKE_CXX_COMPILER=$PREFIX/bin/clang++ \
-  -DWITH_WARNINGS=1 \
-  -DTOOLS=0 \
-  -DSCRIPTS=static \
-  -DCMAKE_CXX_FLAGS="-D__ANDROID__ -DANDROID -Wno-deprecated-literal-operator" \
-  -DCMAKE_EXE_LINKER_FLAGS="-Wl,--allow-multiple-definition -lunwind"
-```
-
-#### Compile with Make:
-
-```bash
-# Recommended: use 4 cores to prevent Android Out-Of-Memory (OOM) killer
+# 2. Compile with 4 parallel jobs (to prevent Android OOM crashes)
+cd build
 make -j4
 
-# Once compilation finishes, install binaries to ~/azeroth-server/
+# 3. Install binaries to ~/azeroth-server/
 make install
 ```
 
@@ -118,7 +109,7 @@ make install
 
 ### Step 5: Database Setup (MariaDB)
 
-1. Initialize MariaDB data directory (one-time setup):
+1. Initialize the MariaDB data directory (one-time setup):
    ```bash
    mariadb-install-db
    ```
@@ -147,7 +138,7 @@ make install
    GRANT ALL PRIVILEGES ON acore_world.* TO 'acore'@'localhost';
 
    GRANT ALL PRIVILEGES ON acore_auth.* TO 'acore'@'127.0.0.1';
-   GRANT ALL PRIVILEges ON acore_characters.* TO 'acore'@'127.0.0.1';
+   GRANT ALL PRIVILEGES ON acore_characters.* TO 'acore'@'127.0.0.1';
    GRANT ALL PRIVILEGES ON acore_world.* TO 'acore'@'127.0.0.1';
 
    GRANT ALL PRIVILEGES ON *.* TO 'acore'@'%';
@@ -182,25 +173,20 @@ cd ~/azeroth-server/etc
 cp authserver.conf.dist authserver.conf
 cp worldserver.conf.dist worldserver.conf
 ```
-Edit `worldserver.conf` to configure `DataDir = "$HOME/azeroth-server/data"` (or path to your maps).
+Edit `worldserver.conf` and set `DataDir = "$HOME/azeroth-server/data"` (or the path where your maps are located).
 
 ---
 
 ### Step 8: Launching the Server
 
-Using `tmux` is highly recommended so your server sessions stay alive even if Termux is minimized:
+We provide automated management scripts in `tools/`:
 
 ```bash
-# 1. Start a tmux session
-tmux new -s wow_server
+# Start MariaDB, auto-detect Wi-Fi IP, update realmlist, and start authserver + worldserver in tmux:
+./tools/ac_server_start.sh
 
-# 2. In Window 1, start Auth Server:
-cd ~/azeroth-server/bin
-./authserver
-
-# 3. Split or create a new window (Ctrl+b then c), and start World Server:
-cd ~/azeroth-server/bin
-./worldserver
+# To safely stop all server processes and MariaDB:
+./tools/ac_server_stop.sh
 ```
 
 On first startup, `worldserver` will automatically populate the database tables using AzerothCore's `DBUpdater`.
@@ -210,7 +196,7 @@ On first startup, `worldserver` will automatically populate the database tables 
 ## 🎮 Connecting Your Client
 
 ### Option 1: On the Same Android Device (via Winlator)
-If you are running the WoW 3.3.5a client on the same device using [Winlator](https://github.com/brunodev85/winlator):
+If you are running the WoW 3.3.5a client on the same phone using [Winlator](https://github.com/brunodev85/winlator):
 1. Open your client's `Data/enUS/realmlist.wtf` (or matching locale folder).
 2. Set realmlist to localhost:
    ```text
@@ -218,41 +204,23 @@ If you are running the WoW 3.3.5a client on the same device using [Winlator](htt
    ```
 
 ### Option 2: From a PC or Another Device (over Local Wi-Fi)
-If your server is on your phone and you want to connect from your PC over Wi-Fi:
-1. Find your Android phone's local Wi-Fi IP in Termux:
-   ```bash
-   ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}'
-   ```
-   *(Example: `192.168.1.150`)*
-2. Update the realmlist in MariaDB:
-   ```bash
-   mariadb -u acore -pacore -e "UPDATE acore_auth.realmlist SET address = '192.168.1.150' WHERE id = 1;"
-   ```
-3. On your PC's WoW client, edit `Data/enUS/realmlist.wtf`:
+If your server is running on your phone and you want to connect from your PC over Wi-Fi:
+1. When you launch the server with `./tools/ac_server_start.sh`, it automatically detects your Wi-Fi IP and updates the `realmlist` table for you!
+2. On your PC's WoW client, simply edit `Data/enUS/realmlist.wtf` to match your phone's Wi-Fi IP:
    ```text
-   set realmlist 192.168.1.150
+   set realmlist <YOUR_PHONE_WLAN_IP>
    ```
 
 ---
 
 ## 🔄 Keeping Updated with Upstream AzerothCore
 
-To pull new core updates from official AzerothCore while keeping your Android fixes intact:
+To pull new core updates from official AzerothCore while cleanly keeping your Android fixes on top:
 
 ```bash
-# 1. Add upstream if not already added
-git remote add upstream https://github.com/azerothcore/azerothcore-wotlk.git
-
-# 2. Fetch latest commits
-git fetch upstream master
-
-# 3. Rebase your custom branch
-git checkout termux-device
-git rebase upstream/master
-
-# 4. Push rebased branch to your GitHub fork
-git push --force-with-lease origin termux-device
+./tools/sync_upstream.sh
 ```
+This script fetches official commits, checks for updates, rebases `android-termux` cleanly on top of `upstream/master`, and guides you to push to your fork.
 
 ---
 
