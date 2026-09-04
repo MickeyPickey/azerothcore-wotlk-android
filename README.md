@@ -95,15 +95,15 @@ We provide a helper script that automatically applies all Android Clang and link
 # 1. Run the Android CMake configurator
 ./tools/configure.sh
 
-# 2. Compile with 4 parallel jobs (to prevent Android OOM crashes)
+# 2. Compile using (max cores - 2) parallel jobs to prevent Android OOM crashes:
 cd build
-make -j4
+make -j$(($(nproc) - 2))
 
 # 3. Install binaries to ~/azeroth-server/
 make install
 ```
 
-> ⚠️ **Do NOT use `make -j8`:** Running 8 parallel compiler processes on Android consumes 4–6 GB of RAM, causing Android's kernel to kill the build (`signal 9 / Killed`). Sticking to `-j4` ensures stability.
+> ⚠️ **CPU Core Recommendation:** Always leave at least 2 CPU cores free (e.g. `make -j$(($(nproc) - 2))`). Compiling on all available cores consumes too much RAM and causes Android's kernel to kill the build (`signal 9 / Killed`). For instance, on an 8-core device, use `-j6` (or `-j4` if you have limited RAM).
 
 ---
 
@@ -227,7 +227,7 @@ This script fetches official commits, checks for updates, rebases `android-termu
 ## ❓ Troubleshooting & Performance FAQ
 
 * **Compiler gets killed (`Killed` / `signal 9`):**
-  * Android killed Clang due to low memory. Lower your parallel jobs: use `make -j3` or `make -j4` instead of `-j8`.
+  * Android killed Clang due to low memory. Lower your parallel jobs: use `make -j$(($(nproc) - 2))` or lower instead of maximum cores.
 * **Server disconnects when phone screen locks:**
   * Android is putting Termux into battery sleep. Run `termux-wake-lock` and disable battery optimization for Termux in Android Settings.
 * **Thermal Throttling:**
