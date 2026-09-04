@@ -54,6 +54,7 @@ mariadb -u root <<EOSQL
 CREATE DATABASE IF NOT EXISTS acore_auth DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE DATABASE IF NOT EXISTS acore_characters DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE DATABASE IF NOT EXISTS acore_world DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS acore_playerbots DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE USER IF NOT EXISTS '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}';
 CREATE USER IF NOT EXISTS '${DB_USER}'@'127.0.0.1' IDENTIFIED BY '${DB_PASS}';
@@ -66,16 +67,18 @@ ALTER USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_PASS}';
 GRANT ALL PRIVILEGES ON acore_auth.* TO '${DB_USER}'@'localhost';
 GRANT ALL PRIVILEGES ON acore_characters.* TO '${DB_USER}'@'localhost';
 GRANT ALL PRIVILEGES ON acore_world.* TO '${DB_USER}'@'localhost';
+GRANT ALL PRIVILEGES ON acore_playerbots.* TO '${DB_USER}'@'localhost';
 
 GRANT ALL PRIVILEGES ON acore_auth.* TO '${DB_USER}'@'127.0.0.1';
 GRANT ALL PRIVILEGES ON acore_characters.* TO '${DB_USER}'@'127.0.0.1';
 GRANT ALL PRIVILEGES ON acore_world.* TO '${DB_USER}'@'127.0.0.1';
+GRANT ALL PRIVILEGES ON acore_playerbots.* TO '${DB_USER}'@'127.0.0.1';
 
 GRANT ALL PRIVILEGES ON *.* TO '${DB_USER}'@'%';
 FLUSH PRIVILEGES;
 EOSQL
 
-echo "[✓] Databases 'acore_auth', 'acore_characters', and 'acore_world' are ready."
+echo "[✓] Databases 'acore_auth', 'acore_characters', 'acore_world', and 'acore_playerbots' are ready."
 echo "[✓] User '${DB_USER}' configured with full permissions."
 echo ""
 echo "======================================================================"

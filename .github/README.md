@@ -247,14 +247,16 @@ If your server is running on your phone and you want to connect from your PC ove
 
 ---
 
-## 🔄 Keeping Updated with Upstream AzerothCore
+## 🔄 Keeping Updated with Upstream AzerothCore (Playerbot branch)
 
-To pull new core updates from official AzerothCore while cleanly keeping your Android fixes on top:
+This repository tracks upstream [`mod-playerbots/azerothcore-wotlk`](https://github.com/mod-playerbots/azerothcore-wotlk) (branch `Playerbot`), which continuously integrates official AzerothCore master updates while maintaining core hooks and compatibility for `mod-playerbots`.
+
+To pull new core updates while cleanly keeping your Android fixes on top:
 
 ```bash
 ./tools/sync_upstream.sh
 ```
-This script fetches official commits, checks for updates, rebases `android-termux` cleanly on top of `upstream/master`, and guides you to push to your fork.
+This script fetches upstream commits, checks for updates, rebases `android-termux` cleanly on top of `upstream/Playerbot`, and guides you to push to your fork.
 
 ---
 
