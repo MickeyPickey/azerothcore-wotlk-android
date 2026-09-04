@@ -7,6 +7,7 @@ A tuned, native [AzerothCore](https://www.azerothcore.org/) World of Warcraft (3
 ## 🌟 Acknowledgements & Inspiration
 
 * **Inspiration & Concept:** Special thanks and credit to [duall/singlePlayerWow-android](https://github.com/duall/singlePlayerWow-android) for providing the original inspiration, concept, and groundwork for running a full AzerothCore server natively on Android.
+* **Playerbots Integration:** Special thanks to the [mod-playerbots](https://github.com/mod-playerbots/azerothcore-wotlk) team for maintaining the Playerbot-enabled AzerothCore fork and bot framework.
 * **Upstream Project:** Built on top of the incredible work by the [AzerothCore](https://github.com/azerothcore/azerothcore-wotlk) team and community.
 
 ---
@@ -220,7 +221,7 @@ We provide automated management scripts in `tools/`:
 ```
 
 > 💡 **CPU Pinning Note:**  
-> By default, `ac_server_start.sh` pins the server and database processes to **cores 0–1** (`CPU_CORES="0-1"`). This intentional allocation leaves your device's remaining CPU cores completely free so you can run the WoW client on the same device (via Winlator) smoothly without lag.  
+> By default, `ac_server_start.sh` pins the server and database processes to **cores 0–1** (`CPU_CORES="0-1"`). This intentional allocation leaves your device's remaining CPU cores completely free so you can run the WoW client on the same device (via Winlator or GameNative) smoothly without lag.  
 > If you are hosting the server for PC / external players and want to grant the server more CPU power, you can easily tweak it by passing `CPU_CORES` when launching (e.g. `CPU_CORES="0-3" ./tools/ac_server_start.sh`) or editing line 14 of `tools/ac_server_start.sh`.
 
 On first startup, `worldserver` will automatically populate the database tables using AzerothCore's `DBUpdater`.
@@ -229,8 +230,8 @@ On first startup, `worldserver` will automatically populate the database tables 
 
 ## 🎮 Connecting Your Client
 
-### Option 1: On the Same Android Device (via Winlator)
-If you are running the WoW 3.3.5a client on the same phone using [Winlator](https://github.com/brunodev85/winlator):
+### Option 1: On the Same Android Device (via Winlator or GameNative)
+If you are running the WoW 3.3.5a client directly on the same phone using Windows emulation tools such as [Winlator](https://github.com/brunodev85/winlator) or [GameNative](https://github.com/utkarshdalal/GameNative):
 1. Open your client's `Data/enUS/realmlist.wtf` (or matching locale folder).
 2. Set realmlist to localhost:
    ```text
