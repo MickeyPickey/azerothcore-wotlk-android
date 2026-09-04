@@ -6,6 +6,7 @@
 # Use ./tools/pull_modules.sh --latest to pull bleeding-edge upstream versions.
 # ==============================================================================
 
+https://github.com/NathanHandley/mod-ah-bot-plus.git f685832994c825f90aa5a3dc0e1620aa568e875b
 https://github.com/azerothcore/mod-1v1-arena.git 5ef5708d031f3b02283e6e599aa655bd320d904e
 https://github.com/azerothcore/mod-account-achievements.git bfbe3677635feeef823057964e028e023633115a
 https://github.com/azerothcore/mod-auto-revive.git ce5ca7a600dbef0dec48dc6da42d374d08d6b728

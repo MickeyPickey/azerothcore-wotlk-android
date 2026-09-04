@@ -76,7 +76,7 @@ cd ~/azerothcore-src
 This repository includes a pre-configured module list supporting 40+ popular AzerothCore mods with a **stable lockfile** to prevent broken builds:
 
 1. Open `conf/modules.list` in a text editor (e.g. `nano conf/modules.list`).
-2. We have enabled 24 curated modules out-of-the-box (`mod-playerbots`, `AutoBalance`, `Solo-LFG`, `Transmog`, etc.). Uncomment or comment (`#`) any mods you want to add or remove.
+2. We have enabled 25 curated modules out-of-the-box (`mod-playerbots`, `mod-ah-bot-plus`, `AutoBalance`, `Solo-LFG`, etc.). Uncomment or comment (`#`) any mods you want to add or remove.
 3. Run the pull script:
    ```bash
    # Default: Clones and pins all enabled modules to verified, STABLE commits:
@@ -204,7 +204,7 @@ cp -r conf/dist/android/* ~/azeroth-server/etc/
 > - `TempDir = "/data/data/com.termux/files/usr/tmp"` (fixes crashes on missing desktop `/tmp`)
 > - `UseProcessors = 3` (CPU core affinity tuned for mobile chipsets)
 > - Visibility distances balanced for mobile RAM and smooth frame rates
-> - Pre-configured default settings for all bundled gameplay modules (`playerbots`, `AutoBalance`, `Solo-LFG`, `transmog`, etc.)
+> - Pre-configured default settings for all bundled gameplay modules (`playerbots`, `AHBot`, `AutoBalance`, `Solo-LFG`, `transmog`, etc.)
 
 ---
 

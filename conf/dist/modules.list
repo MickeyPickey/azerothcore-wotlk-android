@@ -27,6 +27,9 @@ https://github.com/azerothcore/mod-auto-revive.git
 # https://github.com/azerothcore/mod-reward-played-time.git
 # https://github.com/azerothcore/mod-fireworks-on-level.git
 
+# Economy & Auction House
+https://github.com/NathanHandley/mod-ah-bot-plus.git
+
 # PvP & Arenas & Duels
 https://github.com/azerothcore/mod-1v1-arena.git
 https://github.com/azerothcore/mod-top-arena.git
