@@ -63,7 +63,7 @@ pkg install git cmake make clang mariadb boost-headers boost-static tmux libc++ 
 Clone this repository and switch to the `android-termux` branch:
 
 ```bash
-git clone -b android-termux https://github.com/MickeyPickey/azerothcore-android.git ~/azerothcore-src
+git clone -b android-termux https://github.com/MickeyPickey/azerothcore-wotlk-android.git ~/azerothcore-src
 cd ~/azerothcore-src
 ```
 
