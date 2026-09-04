@@ -13,35 +13,34 @@
 # ==============================================================================
 
 # Playerbots & Level Brackets
-# https://github.com/liyunfan1223/mod-playerbots.git
-# https://github.com/DustinHendrickson/mod-player-bot-level-brackets.git
+https://github.com/liyunfan1223/mod-playerbots.git
+https://github.com/DustinHendrickson/mod-player-bot-level-brackets.git
 
 # Progression & Gameplay
-# https://github.com/ZhengPeiRu21/mod-individual-progression.git
-# https://github.com/azerothcore/mod-autobalance.git
-# https://github.com/azerothcore/mod-dynamic-xp.git
-# https://github.com/azerothcore/mod-individual-xp.git
-# https://github.com/hallgaeuer/mod-dynamic-loot-rates.git
-# https://github.com/noisiver/mod-junk-to-gold.git
-# https://github.com/noisiver/mod-learnspells.git
-# https://github.com/azerothcore/mod-auto-revive.git
+https://github.com/ZhengPeiRu21/mod-individual-progression.git
+https://github.com/azerothcore/mod-autobalance.git
+https://github.com/azerothcore/mod-dynamic-xp.git
+https://github.com/azerothcore/mod-individual-xp.git
+https://github.com/hallgaeuer/mod-dynamic-loot-rates.git
+https://github.com/noisiver/mod-junk-to-gold.git
+https://github.com/azerothcore/mod-auto-revive.git
 # https://github.com/azerothcore/mod-reward-played-time.git
 # https://github.com/azerothcore/mod-fireworks-on-level.git
 
 # PvP & Arenas & Duels
-# https://github.com/azerothcore/mod-1v1-arena.git
-# https://github.com/azerothcore/mod-top-arena.git
-# https://github.com/azerothcore/mod-duel-reset.git
-# https://github.com/azerothcore/mod-phased-duels.git
-# https://github.com/azerothcore/mod-pvp-titles.git
-# https://github.com/azerothcore/mod-desertion-warnings.git
-# https://github.com/azerothcore/mod-low-level-rbg.git
+https://github.com/azerothcore/mod-1v1-arena.git
+https://github.com/azerothcore/mod-top-arena.git
+https://github.com/azerothcore/mod-duel-reset.git
+https://github.com/azerothcore/mod-phased-duels.git
+https://github.com/azerothcore/mod-pvp-titles.git
+https://github.com/azerothcore/mod-desertion-warnings.git
+https://github.com/azerothcore/mod-low-level-rbg.git
 
 # Dungeons & Group Finding & Instances
-# https://github.com/azerothcore/mod-solo-lfg.git
-# https://github.com/azerothcore/mod-rdf-expansion.git
-# https://github.com/azerothcore/mod-instance-reset.git
-# https://github.com/azerothcore/mod-boss-announcer.git
+https://github.com/azerothcore/mod-solo-lfg.git
+https://github.com/azerothcore/mod-rdf-expansion.git
+https://github.com/azerothcore/mod-instance-reset.git
+https://github.com/azerothcore/mod-boss-announcer.git
 
 # NPCs & Vendors & Teleporters
 # https://github.com/azerothcore/mod-npc-buffer.git
@@ -54,14 +53,14 @@
 # Character & Quality of Life
 # https://github.com/azerothcore/mod-transmog.git
 # https://github.com/azerothcore/mod-random-enchants.git
-# https://github.com/azerothcore/mod-account-achievements.git
-# https://github.com/azerothcore/mod-emblem-transfer.git
+https://github.com/azerothcore/mod-account-achievements.git
+https://github.com/azerothcore/mod-emblem-transfer.git
 # https://github.com/azerothcore/mod-guildhouse.git
-# https://github.com/azerothcore/mod-racial-trait-swap.git
+https://github.com/azerothcore/mod-racial-trait-swap.git
 # https://github.com/ZhengPeiRu21/mod-reagent-bank.git
 # https://github.com/azerothcore/mod-morphsummon.git
 
 # System & Performance & Logging
-# https://github.com/azerothcore/mod-better-item-reloading.git
-# https://github.com/azerothcore/mod-queue-list-cache.git
-# https://github.com/azerothcore/mod-who-logged.git
+https://github.com/azerothcore/mod-better-item-reloading.git
+https://github.com/azerothcore/mod-queue-list-cache.git
+https://github.com/azerothcore/mod-who-logged.git

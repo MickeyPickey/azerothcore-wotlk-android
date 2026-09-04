@@ -66,7 +66,7 @@ pkill -f "mariadbd" 2>/dev/null || true
 sleep 2
 
 echo "[-] Launching fresh MariaDB instance (cores $CPU_CORES)..."
-taskset -c "$CPU_CORES" mariadbd-safe --datadir="$MYSQL_DATADIR" > /dev/null 2>&1 &
+taskset -c "$CPU_CORES" mariadbd-safe --datadir="$MYSQL_DATADIR" --user="$(whoami)" > /dev/null 2>&1 &
 
 echo "[-] Waiting for database initialization..."
 DB_READY=false

@@ -29,6 +29,7 @@ Standard AzerothCore is written for desktop Linux with Oracle MySQL 8.0+. Runnin
 5. **Built-in Automation Suite:**
    * Added `tools/pull_modules.sh`: Module manager supporting 40+ optional mods using shallow clones (`--depth 1`).
    * Added `tools/configure.sh`: One-command CMake configuration with Android compiler flags.
+   * Added `tools/db_setup.sh`: Automated MariaDB directory, service, and database/user initialization.
    * Added `tools/ac_server_start.sh` & `tools/ac_server_stop.sh`: Automated tmux launcher with dynamic Wi-Fi IP detection.
    * Added `tools/sync_upstream.sh`: One-command upstream synchronization and rebase.
 
@@ -109,25 +110,38 @@ make install
 
 ### Step 5: Database Setup (MariaDB)
 
-1. Initialize the MariaDB data directory (one-time setup):
+Run our automated database setup script:
+
+```bash
+./tools/db_setup.sh
+```
+
+This single command handles everything automatically:
+- Initializes the MariaDB data directory (if not already done).
+- Starts the MariaDB service in the background.
+- Safely creates the required databases (`acore_auth`, `acore_characters`, `acore_world`) and configures the default `acore` user.
+
+<details>
+<summary><b>Click here to view manual SQL commands (Advanced)</b></summary>
+
+If you prefer to configure MariaDB manually:
+
+1. Initialize and start MariaDB:
    ```bash
    mariadb-install-db
+   mariadbd-safe --datadir="$PREFIX/var/lib/mysql" --user="$(whoami)" &
    ```
 
-2. Start the MariaDB service in the background:
-   ```bash
-   mysqld_safe --datadir="$PREFIX/var/lib/mysql" &
-   ```
-
-3. Configure the database and default AzerothCore user:
+2. Open the MariaDB console:
    ```bash
    mariadb -u root
    ```
-   Inside the MariaDB shell, run:
+
+3. Execute SQL configuration:
    ```sql
-   CREATE DATABASE acore_auth;
-   CREATE DATABASE acore_characters;
-   CREATE DATABASE acore_world;
+   CREATE DATABASE acore_auth DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   CREATE DATABASE acore_characters DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   CREATE DATABASE acore_world DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
    CREATE USER 'acore'@'localhost' IDENTIFIED BY 'acore';
    CREATE USER 'acore'@'127.0.0.1' IDENTIFIED BY 'acore';
@@ -145,35 +159,48 @@ make install
    FLUSH PRIVILEGES;
    EXIT;
    ```
+</details>
 
 ---
 
 ### Step 6: Client Data (DBC, Maps, VMaps, MMaps)
 
-To run `worldserver`, you need the extracted 3.3.5a game data:
-- `dbc/`
-- `maps/`
-- `vmaps/`
-- `mmaps/`
-- `Cameras/`
+To run `worldserver`, you need the pre-extracted 3.3.5a game data (`dbc/`, `maps/`, `vmaps/`, `mmaps/`, `Cameras/`).
 
-Place these folders directly inside your server directory:
+Instead of extracting data yourself from a WoW client, you can use the ready-to-use **[AC Data v20 enUS (Latest)](https://github.com/wowgaming/client-data/releases/tag/v20.0)** release from `wowgaming/client-data`:
+
+#### Direct Download via Termux:
 ```bash
-~/azeroth-server/data/
-# or directly under ~/azeroth-server/ (ensure DataDir in worldserver.conf points to their location)
+# Create data folder inside your server directory
+mkdir -p ~/azeroth-server/data && cd ~/azeroth-server/data
+
+# Download AC Data v20 package (~1.4 GB)
+curl -L -O https://github.com/wowgaming/client-data/releases/download/v20.0/Data.zip
+
+# Unpack all data folders and remove zip
+unzip Data.zip && rm Data.zip
 ```
+
+> **Manual Download Alternative:**  
+> You can also download `Data.zip` in your browser from the **[wowgaming/client-data v20.0 Release](https://github.com/wowgaming/client-data/releases/tag/v20.0)** page, transfer it to your device, and unpack it into `~/azeroth-server/data/`.
 
 ---
 
 ### Step 7: Configure Server Files
 
-Navigate to the installed server configuration directory:
+We provide pre-tuned configuration files optimized specifically for Android (Termux temp paths, CPU core pinning, mobile view distances, and module settings):
+
 ```bash
-cd ~/azeroth-server/etc
-cp authserver.conf.dist authserver.conf
-cp worldserver.conf.dist worldserver.conf
+# Copy pre-configured Android configs into your server directory:
+cp -r conf/dist/android/* ~/azeroth-server/etc/
 ```
-Edit `worldserver.conf` and set `DataDir = "$HOME/azeroth-server/data"` (or the path where your maps are located).
+
+> **What's pre-configured?**
+> - `DataDir = "."` (looks in `~/azeroth-server/` or `~/azeroth-server/data/`)
+> - `TempDir = "/data/data/com.termux/files/usr/tmp"` (fixes crashes on missing desktop `/tmp`)
+> - `UseProcessors = 3` (CPU core affinity tuned for mobile chipsets)
+> - Visibility distances balanced for mobile RAM and smooth frame rates
+> - Pre-configured default settings for all bundled gameplay modules (`playerbots`, `AutoBalance`, `Solo-LFG`, `transmog`, etc.)
 
 ---
 
@@ -188,6 +215,10 @@ We provide automated management scripts in `tools/`:
 # To safely stop all server processes and MariaDB:
 ./tools/ac_server_stop.sh
 ```
+
+> 💡 **CPU Pinning Note:**  
+> By default, `ac_server_start.sh` pins the server and database processes to **cores 0–1** (`CPU_CORES="0-1"`). This intentional allocation leaves your device's remaining CPU cores completely free so you can run the WoW client on the same device (via Winlator) smoothly without lag.  
+> If you are hosting the server for PC / external players and want to grant the server more CPU power, you can easily tweak it by passing `CPU_CORES` when launching (e.g. `CPU_CORES="0-3" ./tools/ac_server_start.sh`) or editing line 14 of `tools/ac_server_start.sh`.
 
 On first startup, `worldserver` will automatically populate the database tables using AzerothCore's `DBUpdater`.
 
