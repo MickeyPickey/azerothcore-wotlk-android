@@ -22473,6 +22473,23 @@ soap_recv_empty_response(struct soap *soap)
 /******************************************************************************/
 
 #ifndef WITH_NOIO
+#if defined(HAVE_STRERROR_R) && defined(__cplusplus)
+extern "C++" {
+static inline const char*
+soap_handle_strerror_r(char *res, char * /*buf*/, size_t /*buflen*/)
+{
+  return res;
+}
+static inline const char*
+soap_handle_strerror_r(int res, char *buf, size_t buflen)
+{
+  if (res != 0)
+    soap_strcpy(buf, buflen, "unknown error");
+  return buf;
+}
+}
+#endif
+
 static const char*
 soap_strerror(struct soap *soap)
 {
@@ -22482,7 +22499,9 @@ soap_strerror(struct soap *soap)
   {
 #ifndef WIN32
 # ifdef HAVE_STRERROR_R
-#  if !defined(_GNU_SOURCE) || (!_GNU_SOURCE && ((!defined(_POSIX_C_SOURCE) && !defined(_XOPEN_SOURCE)) || (_POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600)) || defined(__ANDROID__) || !defined(__GLIBC__))
+#  if defined(__cplusplus)
+    return soap_handle_strerror_r(strerror_r(err, soap->msgbuf, sizeof(soap->msgbuf)), soap->msgbuf, sizeof(soap->msgbuf));
+#  elif !defined(_GNU_SOURCE) || (!_GNU_SOURCE && ((!defined(_POSIX_C_SOURCE) && !defined(_XOPEN_SOURCE)) || (_POSIX_C_SOURCE >= 200112L || _XOPEN_SOURCE >= 600)) || defined(__ANDROID__) || !defined(__GLIBC__))
     err = strerror_r(err, soap->msgbuf, sizeof(soap->msgbuf)); /* XSI-compliant */
     if (err != 0)
       soap_strcpy(soap->msgbuf, sizeof(soap->msgbuf), "unknown error");

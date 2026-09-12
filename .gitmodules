@@ -1,0 +1,105 @@
+[submodule "modules/mod-1v1-arena"]
+	path = modules/mod-1v1-arena
+	url = https://github.com/azerothcore/mod-1v1-arena.git
+[submodule "modules/mod-account-achievements"]
+	path = modules/mod-account-achievements
+	url = https://github.com/azerothcore/mod-account-achievements.git
+[submodule "modules/mod-ah-bot-plus"]
+	path = modules/mod-ah-bot-plus
+	url = https://github.com/NathanHandley/mod-ah-bot-plus.git
+[submodule "modules/mod-auto-revive"]
+	path = modules/mod-auto-revive
+	url = https://github.com/azerothcore/mod-auto-revive.git
+[submodule "modules/mod-autobalance"]
+	path = modules/mod-autobalance
+	url = https://github.com/azerothcore/mod-autobalance.git
+[submodule "modules/mod-better-item-reloading"]
+	path = modules/mod-better-item-reloading
+	url = https://github.com/azerothcore/mod-better-item-reloading.git
+[submodule "modules/mod-boss-announcer"]
+	path = modules/mod-boss-announcer
+	url = https://github.com/azerothcore/mod-boss-announcer.git
+[submodule "modules/mod-desertion-warnings"]
+	path = modules/mod-desertion-warnings
+	url = https://github.com/azerothcore/mod-desertion-warnings.git
+[submodule "modules/mod-duel-reset"]
+	path = modules/mod-duel-reset
+	url = https://github.com/azerothcore/mod-duel-reset.git
+[submodule "modules/mod-dungeon-clear"]
+	path = modules/mod-dungeon-clear
+	url = https://github.com/jrad7/mod-dungeon-clear.git
+[submodule "modules/mod-dynamic-loot-rates"]
+	path = modules/mod-dynamic-loot-rates
+	url = https://github.com/hallgaeuer/mod-dynamic-loot-rates.git
+[submodule "modules/mod-dynamic-xp"]
+	path = modules/mod-dynamic-xp
+	url = https://github.com/azerothcore/mod-dynamic-xp.git
+[submodule "modules/mod-emblem-transfer"]
+	path = modules/mod-emblem-transfer
+	url = https://github.com/azerothcore/mod-emblem-transfer.git
+[submodule "modules/mod-individual-progression"]
+	path = modules/mod-individual-progression
+	url = https://github.com/ZhengPeiRu21/mod-individual-progression.git
+[submodule "modules/mod-individual-xp"]
+	path = modules/mod-individual-xp
+	url = https://github.com/azerothcore/mod-individual-xp.git
+[submodule "modules/mod-instance-reset"]
+	path = modules/mod-instance-reset
+	url = https://github.com/azerothcore/mod-instance-reset.git
+[submodule "modules/mod-junk-to-gold"]
+	path = modules/mod-junk-to-gold
+	url = https://github.com/noisiver/mod-junk-to-gold.git
+[submodule "modules/mod-low-level-rbg"]
+	path = modules/mod-low-level-rbg
+	url = https://github.com/azerothcore/mod-low-level-rbg.git
+[submodule "modules/mod-multibot-bridge"]
+	path = modules/mod-multibot-bridge
+	url = https://github.com/Wishmaster117/mod-multibot-bridge.git
+[submodule "modules/mod-npc-beastmaster"]
+	path = modules/mod-npc-beastmaster
+	url = https://github.com/azerothcore/mod-npc-beastmaster.git
+[submodule "modules/mod-npc-buffer"]
+	path = modules/mod-npc-buffer
+	url = https://github.com/azerothcore/mod-npc-buffer.git
+[submodule "modules/mod-npc-enchanter"]
+	path = modules/mod-npc-enchanter
+	url = https://github.com/azerothcore/mod-npc-enchanter.git
+[submodule "modules/mod-npc-spectator"]
+	path = modules/mod-npc-spectator
+	url = https://github.com/Gozzim/mod-npc-spectator.git
+[submodule "modules/mod-phased-duels"]
+	path = modules/mod-phased-duels
+	url = https://github.com/azerothcore/mod-phased-duels.git
+[submodule "modules/mod-player-bot-level-brackets"]
+	path = modules/mod-player-bot-level-brackets
+	url = https://github.com/DustinHendrickson/mod-player-bot-level-brackets.git
+[submodule "modules/mod-playerbots"]
+	path = modules/mod-playerbots
+	url = https://github.com/liyunfan1223/mod-playerbots.git
+[submodule "modules/mod-pvp-titles"]
+	path = modules/mod-pvp-titles
+	url = https://github.com/azerothcore/mod-pvp-titles.git
+[submodule "modules/mod-queue-list-cache"]
+	path = modules/mod-queue-list-cache
+	url = https://github.com/azerothcore/mod-queue-list-cache.git
+[submodule "modules/mod-quick-teleport"]
+	path = modules/mod-quick-teleport
+	url = https://github.com/azerothcore/mod-quick-teleport.git
+[submodule "modules/mod-racial-trait-swap"]
+	path = modules/mod-racial-trait-swap
+	url = https://github.com/azerothcore/mod-racial-trait-swap.git
+[submodule "modules/mod-rdf-expansion"]
+	path = modules/mod-rdf-expansion
+	url = https://github.com/azerothcore/mod-rdf-expansion.git
+[submodule "modules/mod-solo-lfg"]
+	path = modules/mod-solo-lfg
+	url = https://github.com/azerothcore/mod-solo-lfg.git
+[submodule "modules/mod-top-arena"]
+	path = modules/mod-top-arena
+	url = https://github.com/azerothcore/mod-top-arena.git
+[submodule "modules/mod-transmog"]
+	path = modules/mod-transmog
+	url = https://github.com/azerothcore/mod-transmog.git
+[submodule "modules/mod-who-logged"]
+	path = modules/mod-who-logged
+	url = https://github.com/azerothcore/mod-who-logged.git
