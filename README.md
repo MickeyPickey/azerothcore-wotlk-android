@@ -258,19 +258,35 @@ If your server is running on your phone and you want to connect from your PC ove
 
 This repository tracks upstream [`mod-playerbots/azerothcore-wotlk`](https://github.com/mod-playerbots/azerothcore-wotlk) (branch `Playerbot`), which continuously integrates official AzerothCore master updates while maintaining core hooks and compatibility for `mod-playerbots`.
 
-To pull new core updates while cleanly keeping your Android fixes on top:
+All Android-specific adjustments, build tools, configurations, and submodule setups are maintained as clean commits sitting directly on top of upstream.
+
+### Automated Sync & Rebase:
+To pull new core updates while cleanly keeping your Android customizations on top:
 
 ```bash
 ./tools/sync_upstream.sh
 ```
 This script:
-1. Fetches upstream changes from `mod-playerbots/azerothcore-wotlk` (`Playerbot` branch).
-2. Fast-forwards your local `Playerbot` mirror and pushes it to `origin/Playerbot`.
-3. Rebases `android-termux` cleanly on top of `Playerbot`.
-4. Prompts you interactively to push the rebased `android-termux` to `origin` (or automatically with `--push` / `-p`):
+1. Fetches the latest upstream changes from `mod-playerbots/azerothcore-wotlk` (`Playerbot` branch).
+2. Rebases `android-termux` directly on top of `upstream/Playerbot`, cleanly replaying your customizations on top.
+3. Prompts you interactively to push the rebased `android-termux` to your GitHub fork (or automatically with `--push` / `-p`):
    ```bash
    ./tools/sync_upstream.sh --push
    ```
+
+### Combining (Squashing) Custom Commits:
+To combine all your custom commits into a single clean commit locally (without fetching or updating upstream):
+
+```bash
+# Soft-reset to the exact point your branch diverged from upstream
+git reset --soft $(git merge-base HEAD upstream/Playerbot)
+
+# Commit all changes into a single unified commit
+git commit -m "feat(android): unified android-termux customizations and tooling"
+
+# Push the unified commit to your GitHub fork
+git push --force-with-lease origin android-termux
+```
 
 
 ---
